@@ -1,0 +1,24 @@
+#pragma once
+
+#include <paint/workspace_strategy/workspace_strategy.hpp>
+#include <paint/shapes/bound.hpp>
+
+class BoundStrategy: public WorkSpaceStrategy
+{
+public:
+    BoundStrategy(WorkSpace* context);
+    virtual ~BoundStrategy() = default;
+
+    void mousePressEvent(QMouseEvent* event) override;
+    void mouseMoveEvent(QMouseEvent* event) override;
+    void mouseReleaseEvent(QMouseEvent* event) override;
+    void drawTemporary(QPainter* painter) override;
+private:
+    bool _isDrawning;
+    BaseShape* _startShape;
+    QPoint _startPos;
+    QPoint _currentPos;
+    QPoint _endPos;
+
+    void endDrawning();
+};

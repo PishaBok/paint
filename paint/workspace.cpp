@@ -1,42 +1,64 @@
 #include <paint/workspace.hpp>
 
 WorkSpace::WorkSpace(QFrame* parent)
-    : QFrame(parent)
+    : QFrame(parent), _strategy{nullptr}
 {
     setObjectName("workSpace");
 }
 
+void WorkSpace::setStrategy(std::unique_ptr<WorkSpaceStrategy> strategy)
+{
+    _strategy = std::move(strategy);
+}
+
+void WorkSpace::addShape(std::unique_ptr<BaseShape> shape)
+{
+    _shapes.push_back(std::move(shape));
+}
+
+void WorkSpace::removeShape(BaseShape* shapeToRemove)
+{
+    auto it = std::find_if(_shapes.begin(), _shapes.end(),
+        [shapeToRemove](const std::unique_ptr<BaseShape>& shape) {
+            return shape.get() == shapeToRemove;
+    });
+
+    if (it != _shapes.end()) {_shapes.erase(it);}
+}
+
+void WorkSpace::addBound(std::unique_ptr<Bound> bound)
+{
+    _bounds.push_back(std::move(bound));
+}
+
+void WorkSpace::removeBoundsIf(const std::function<bool(const std::unique_ptr<Bound>&)>& predicate)
+{
+    _bounds.erase(std::remove_if(_bounds.begin(), _bounds.end(), predicate), _bounds.end());
+}
+
+const std::vector<std::unique_ptr<BaseShape>>& WorkSpace::shapes() const
+{
+    return _shapes;
+}
+
+const std::vector<std::unique_ptr<Bound>>& WorkSpace::bounds() const
+{
+    return _bounds;
+}
+
 void WorkSpace::mousePressEvent(QMouseEvent* event)
 {
-    if (event->button() == Qt::LeftButton)
-    {
-        _startPoint = event->pos();
-        _endPoint = _startPoint;
-
-        _isDrawning = true;
-        _currentShape = std::make_unique<Triangle>(_startPoint, _endPoint);
-    }
+    if (_strategy) _strategy->mousePressEvent(event);
 }
 
 void WorkSpace::mouseMoveEvent(QMouseEvent* event)
 {
-    if (_isDrawning)
-    {
-        _endPoint = event->pos();
-        update();
-    }
+    if (_strategy) _strategy->mouseMoveEvent(event);
 }
 
 void WorkSpace::mouseReleaseEvent(QMouseEvent* event)
 {
-    if (event->button() == Qt::LeftButton && _isDrawning)
-    {
-        _endPoint = event->pos();
-        _isDrawning = false;
-
-        _shapes.push_back(std::make_unique<Triangle>(_startPoint, _endPoint));
-        update();
-    }
+    if (_strategy) _strategy->mouseReleaseEvent(event);
 }
 
 void WorkSpace::paintEvent(QPaintEvent* event)
@@ -46,13 +68,17 @@ void WorkSpace::paintEvent(QPaintEvent* event)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
 
+    // Рисуем фигуры
     for (auto& shape: _shapes)
     {
         shape->draw(&painter);
     }
 
-    if (_isDrawning && _currentShape)
+    // Рисуем связи
+    for (auto& bound: _bounds)
     {
-        _currentShape->drawTemporary(&painter, _startPoint, _endPoint);
+        bound->draw(&painter);
     }
+
+    if (_strategy) {_strategy->drawTemporary(&painter);}
 }

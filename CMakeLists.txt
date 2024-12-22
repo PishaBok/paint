@@ -15,6 +15,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets)
 file(GLOB_RECURSE PROJECT_SOURCES
         "paint/*.cpp"    "paint/.*hpp"
         "paint/shapes/*.cpp"    "paint/shapes/*.hpp"
+        "paint/workspace_strategy/*.cpp"        "paint/workspace_strategy/*.hpp"
 )
 
 add_executable(Paint 

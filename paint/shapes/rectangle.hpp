@@ -6,14 +6,10 @@
 class Rectangle: public BaseShape
 {
 public:
-    Rectangle(const QPoint& topLeft, const QPoint& bottomRight);
+    Rectangle(const QPoint& topLeft = {}, const QPoint& bottomRight = {});
+    virtual ~Rectangle() = default;
 
     void draw(QPainter* painter) override;
-    void drawTemporary(QPainter* painter, const QPoint& start, const QPoint& end) override;
     bool contains(const QPoint& point) override;
     void move(const QPoint& delta) override;
-
-    QRect getBoundingRect() const;
-private:
-    QRect _boundingRect;
 };

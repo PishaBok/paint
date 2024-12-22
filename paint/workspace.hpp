@@ -7,25 +7,34 @@
 #include <QPaintEvent>
 #include <QMouseEvent>
 
-#include <paint/shapes/rectangle.hpp>
-#include <paint/shapes/triangle.hpp>
+#include <paint/workspace_strategy/draw.hpp>
+#include <paint/workspace_strategy/drag.hpp>
+#include <paint/workspace_strategy/bound.hpp>
+#include <paint/workspace_strategy/erase.hpp>
 
 class WorkSpace: public QFrame
 {
     Q_OBJECT
 public:
     WorkSpace(QFrame* parent = nullptr);
+
+    void setStrategy(std::unique_ptr<WorkSpaceStrategy> strategy); // Установить стратегию
+    void addShape(std::unique_ptr<BaseShape> shape);  // Добавить фигуру
+    void removeShape(BaseShape* shapeToRemove); // Удалить фигуру
+    void addBound(std::unique_ptr<Bound> bound); // Добавить связь
+    void removeBoundsIf(const std::function<bool(const std::unique_ptr<Bound>&)>& predicate); // Удаляем связи соответсвующие предикату
+    const std::vector<std::unique_ptr<BaseShape>>& shapes() const; // Получить фигуры
+    const std::vector<std::unique_ptr<Bound>>& bounds() const; // Получить связи
 protected:
-    void paintEvent(QPaintEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;
     void mouseMoveEvent(QMouseEvent* event) override;
     void mouseReleaseEvent(QMouseEvent* event) override;
 
-private:
-    std::vector<std::unique_ptr<BaseShape>> _shapes;
-    QPoint _startPoint;
-    QPoint _endPoint;
+    void paintEvent(QPaintEvent* event) override;
 
-    bool _isDrawning = false;
-    std::unique_ptr<BaseShape> _currentShape;
+private:
+    std::unique_ptr<WorkSpaceStrategy> _strategy; // Текущая стратегия
+
+    std::vector<std::unique_ptr<BaseShape>> _shapes; // Фигуры
+    std::vector<std::unique_ptr<Bound>> _bounds;  // Связи
 };

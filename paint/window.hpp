@@ -13,8 +13,7 @@ public:
     Window(QMainWindow* parent = nullptr);
 
 private:
-    QToolBar* createToolBar();
+    WorkSpace* _workSpace;
 
-private slots:
-    void drawShape();
+    QToolBar* createToolBar();
 };
