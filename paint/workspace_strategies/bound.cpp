@@ -1,4 +1,4 @@
-#include <paint/workspace_strategy/bound.hpp>
+#include <paint/workspace_strategies/bound.hpp>
 #include <paint/workspace.hpp>
 
 BoundStrategy::BoundStrategy(WorkSpace* context)
@@ -38,7 +38,7 @@ void BoundStrategy::handleLeftButton(QMouseEvent* event)
             _isDrawning = true;
             _startPos = _startShape->center(); // Начинаем с центра фигуры
             _currentPos = event->pos();
-            _context->setMouseTracking(true); // Включаем отслеживание мыши
+            _context->setMouseTracking(true);
             _context->update();  
         }
     }

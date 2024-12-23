@@ -1,6 +1,6 @@
 #pragma once
 
-#include <paint/workspace_strategy/workspace_strategy.hpp>
+#include <paint/workspace_strategies/workspace_strategy.hpp>
 #include <paint/shapes/bound.hpp>
 
 class BoundStrategy: public WorkSpaceStrategy

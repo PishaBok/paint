@@ -7,10 +7,10 @@
 #include <QPaintEvent>
 #include <QMouseEvent>
 
-#include <paint/workspace_strategy/draw.hpp>
-#include <paint/workspace_strategy/drag.hpp>
-#include <paint/workspace_strategy/bound.hpp>
-#include <paint/workspace_strategy/erase.hpp>
+#include <paint/workspace_strategies/draw.hpp>
+#include <paint/workspace_strategies/drag.hpp>
+#include <paint/workspace_strategies/bound.hpp>
+#include <paint/workspace_strategies/erase.hpp>
 
 
 class WorkSpace: public QFrame

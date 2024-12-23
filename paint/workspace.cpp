@@ -69,29 +69,24 @@ void WorkSpace::keyPressEvent(QKeyEvent* event)
 
 void WorkSpace::paintEvent(QPaintEvent* event)
 {
+    QFrame::paintEvent(event);
+
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setPen(Qt::black);
-    painter.draw(event->rect());
 
+    // Рисуем фигуры
+    for (auto& shape: _shapes)
+    {
+        shape->draw(&painter);
+    }
 
-    // QFrame::paintEvent(event);
+    // Рисуем связи
+    for (auto& bound: _bounds)
+    {
+        bound->draw(&painter);
+    }
 
-    // QPainter painter(this);
-    // painter.setRenderHint(QPainter::Antialiasing);
-    // painter.setPen(Qt::black);
-
-    // // Рисуем фигуры
-    // for (auto& shape: _shapes)
-    // {
-    //     shape->draw(&painter);
-    // }
-
-    // // Рисуем связи
-    // for (auto& bound: _bounds)
-    // {
-    //     bound->draw(&painter);
-    // }
-
-    // if (_strategy) {_strategy->drawTemporary(&painter);}
+    // Рисуем временную форму 
+    if (_strategy) {_strategy->drawTemporary(&painter);} 
 }

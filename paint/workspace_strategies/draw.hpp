@@ -3,7 +3,7 @@
 #include <map>
 #include <QPoint>
 
-#include <paint/workspace_strategy/workspace_strategy.hpp>
+#include <paint/workspace_strategies/workspace_strategy.hpp>
 #include <paint/shapes/rectangle.hpp>
 #include <paint/shapes/triangle.hpp>
 #include <paint/shapes/ellipse.hpp>

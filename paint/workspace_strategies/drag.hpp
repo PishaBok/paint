@@ -1,7 +1,7 @@
 #pragma once
 
-#include <paint/workspace_strategy/workspace_strategy.hpp>
-#include <paint/shapes/shape.hpp>
+#include <paint/workspace_strategies/workspace_strategy.hpp>
+#include <paint/shapes/base_shape.hpp>
 
 class DragStrategy: public WorkSpaceStrategy
 {
@@ -18,5 +18,6 @@ protected:
 private:
     bool _isDragging;
     BaseShape* _selectedShape;
+    QRect _originalPosition;
     QPoint _lastMousePos;
 };

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QPolygon>
-#include <paint/shapes/shape.hpp>
+#include <paint/shapes/base_shape.hpp>
 
 class Triangle: public BaseShape
 {

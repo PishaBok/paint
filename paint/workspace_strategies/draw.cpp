@@ -1,4 +1,4 @@
-#include <paint/workspace_strategy/draw.hpp>
+#include <paint/workspace_strategies/draw.hpp>
 #include <paint/workspace.hpp>
 
 DrawStrategy::DrawStrategy(WorkSpace* context, const ShapeType type)

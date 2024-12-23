@@ -1,6 +1,6 @@
 #pragma once
 
-#include <paint/shapes/shape.hpp>
+#include <paint/shapes/base_shape.hpp>
 
 class Rectangle: public BaseShape
 {

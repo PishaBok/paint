@@ -1,4 +1,4 @@
-#include <paint/workspace_strategy/workspace_strategy.hpp>
+#include <paint/workspace_strategies/workspace_strategy.hpp>
 #include <paint/workspace.hpp>
 
 WorkSpaceStrategy::WorkSpaceStrategy(WorkSpace* context)

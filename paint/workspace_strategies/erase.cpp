@@ -1,4 +1,4 @@
-#include <paint/workspace_strategy/erase.hpp>
+#include <paint/workspace_strategies/erase.hpp>
 #include <paint/workspace.hpp>
 
 EraseStrategy::EraseStrategy(WorkSpace* context)
