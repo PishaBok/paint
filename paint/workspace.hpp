@@ -12,6 +12,7 @@
 #include <paint/workspace_strategy/bound.hpp>
 #include <paint/workspace_strategy/erase.hpp>
 
+
 class WorkSpace: public QFrame
 {
     Q_OBJECT
@@ -29,6 +30,7 @@ protected:
     void mousePressEvent(QMouseEvent* event) override;
     void mouseMoveEvent(QMouseEvent* event) override;
     void mouseReleaseEvent(QMouseEvent* event) override;
+    void keyPressEvent(QKeyEvent* event) override;
 
     void paintEvent(QPaintEvent* event) override;
 

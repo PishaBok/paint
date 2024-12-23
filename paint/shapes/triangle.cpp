@@ -1,48 +1,43 @@
 #include <paint/shapes/triangle.hpp>
 
-Triangle::Triangle(const QPoint& topLeft, const QPoint& bottomRight)
-    : BaseShape(topLeft, bottomRight)
+Triangle::Triangle(const QPoint& p1, const QPoint& p2, const QPoint& p3)
+    : _polygon{QPolygon({p1, p2, p3})}
 {}
 
 void Triangle::draw(QPainter* painter)
 {
-    QPolygon triangle;
-    triangle << _topLeft << _bottomRight << _thirdPoint;
-
-    painter->setPen(Qt::black);
-    painter->setBrush(Qt::NoBrush);
-    painter->drawPolygon(triangle);
+    painter->drawPolygon(_polygon);
 }
 
-bool Triangle::contains(const QPoint& point)
+bool Triangle::contains(const QPoint& point) const
 {
-    double A = area(_topLeft, _bottomRight, _thirdPoint);
-    double A1 = area(point, _bottomRight, _thirdPoint);
-    double A2 = area(_topLeft, point, _thirdPoint);
-    double A3 = area(_topLeft, _bottomRight, point);
+    return _polygon.containsPoint(point, Qt::OddEvenFill);
+}
 
-    return std::abs(A - (A1 + A2 + A3)) < 1e-6; // Учитываем погрешность
+void Triangle::resize(const QRect& newBounds)
+{
+    QPoint center = newBounds.center();
+    int width = newBounds.width();
+    int height = newBounds.height();
+    _polygon[0] = QPoint(center.x(), center.y() - height / 2);
+    _polygon[1] = QPoint(center.x() - width / 2, center.y() + height / 2);
+    _polygon[2] = QPoint(center.x() + width / 2, center.y() + height / 2);
 }
 
 void Triangle::move(const QPoint& delta)
 {
-   // _triangle.translate(delta);
+    _polygon.translate(delta);
 }
 
-void Triangle::updateShape(const QPoint& topLeft, const QPoint& bottomRight)
+QPoint Triangle::center() const
 {
-    BaseShape::updateShape(topLeft, bottomRight); // Вызываем базовую реализацию
-
-    // Находим третью точку
-    QPoint middlePoint{(_topLeft.x() + _bottomRight.x()) / 2, (_topLeft.y() + _bottomRight.y()) / 2};
-    int height = std::abs(_topLeft.x() - _bottomRight.x()) / 2;
-    _thirdPoint = QPoint{middlePoint.x(), middlePoint.x() / 2};
+    int x = (_polygon[0].x() + _polygon[1].x() + _polygon[2].x()) / 3;
+    int y = (_polygon[0].y() + _polygon[1].y() + _polygon[2].y()) / 3;
+    return QPoint(x, y);
 }
 
-
-double Triangle::area(const QPoint& a, const QPoint& b, const QPoint& c) const
+QRect Triangle::boundingRect() const
 {
-    return std::abs((a.x() * (b.y() - c.y()) +
-                         b.x() * (c.y() - a.y()) +
-                         c.x() * (a.y() - b.y())) / 2.0);
+    return _polygon.boundingRect();
 }
+

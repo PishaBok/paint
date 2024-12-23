@@ -7,14 +7,14 @@ DrawStrategy::DrawStrategy(WorkSpace* context, const ShapeType type)
 
 void DrawStrategy::mousePressEvent(QMouseEvent* event)
 {
-    if (event->button() == Qt::LeftButton)
+    if (event->button() == Qt::LeftButton) // Начинаем рисование фигуры
     {
         _startPos = event->pos();
         _endPos = _startPos;
         _isDrawning = true;
-
         _currentShape = _shapeFactory.at(_type)();
     }
+    else if (event->button() == Qt::RightButton) {onCancel();} // Если была нажата правая кнопка мыши - отменяем рисование
 }
 
 void DrawStrategy::mouseMoveEvent(QMouseEvent* event)
@@ -22,24 +22,34 @@ void DrawStrategy::mouseMoveEvent(QMouseEvent* event)
     if (_isDrawning)
     {
         _endPos = event->pos();
-        _currentShape->updateShape(_startPos, _endPos);
+        _currentShape->resize(QRect(_startPos, _endPos));
         _context->update();
     }
 }
 
 void DrawStrategy::mouseReleaseEvent(QMouseEvent* event)
 {
-    if (event->button() == Qt::LeftButton && _isDrawning)
+    if (_isDrawning)
     {
         _endPos = event->pos();
-        _isDrawning = false;
-
-        _currentShape->updateShape(_startPos, _endPos);
         _context->addShape(std::move(_currentShape));
+        _isDrawning = false;
     }
 }
 
+void DrawStrategy::keyPressEvent(QKeyEvent* event)
+{
+    if (_isDrawning && event->key() == Qt::Key_Escape) {onCancel();}
+} 
+
 void DrawStrategy::drawTemporary(QPainter* painter)
 {
-    _currentShape->draw(painter);
+    if (_isDrawning) {_currentShape->draw(painter);}
+}
+
+void DrawStrategy::onCancel()
+{
+    _isDrawning = false;
+    _currentShape = nullptr;
+    _context->update();
 }

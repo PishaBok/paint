@@ -4,6 +4,7 @@ WorkSpace::WorkSpace(QFrame* parent)
     : QFrame(parent), _strategy{nullptr}
 {
     setObjectName("workSpace");
+    setFocusPolicy(Qt::ClickFocus);
 }
 
 void WorkSpace::setStrategy(std::unique_ptr<WorkSpaceStrategy> strategy)
@@ -48,7 +49,7 @@ const std::vector<std::unique_ptr<Bound>>& WorkSpace::bounds() const
 
 void WorkSpace::mousePressEvent(QMouseEvent* event)
 {
-    if (_strategy) _strategy->mousePressEvent(event);
+    if (_strategy) {_strategy->mousePressEvent(event);}
 }
 
 void WorkSpace::mouseMoveEvent(QMouseEvent* event)
@@ -61,24 +62,36 @@ void WorkSpace::mouseReleaseEvent(QMouseEvent* event)
     if (_strategy) _strategy->mouseReleaseEvent(event);
 }
 
+void WorkSpace::keyPressEvent(QKeyEvent* event)
+{
+    if (_strategy) {_strategy->keyPressEvent(event);}
+}
+
 void WorkSpace::paintEvent(QPaintEvent* event)
 {
-    QFrame::paintEvent(event);
-
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
+    painter.setPen(Qt::black);
+    painter.draw(event->rect());
 
-    // Рисуем фигуры
-    for (auto& shape: _shapes)
-    {
-        shape->draw(&painter);
-    }
 
-    // Рисуем связи
-    for (auto& bound: _bounds)
-    {
-        bound->draw(&painter);
-    }
+    // QFrame::paintEvent(event);
 
-    if (_strategy) {_strategy->drawTemporary(&painter);}
+    // QPainter painter(this);
+    // painter.setRenderHint(QPainter::Antialiasing);
+    // painter.setPen(Qt::black);
+
+    // // Рисуем фигуры
+    // for (auto& shape: _shapes)
+    // {
+    //     shape->draw(&painter);
+    // }
+
+    // // Рисуем связи
+    // for (auto& bound: _bounds)
+    // {
+    //     bound->draw(&painter);
+    // }
+
+    // if (_strategy) {_strategy->drawTemporary(&painter);}
 }

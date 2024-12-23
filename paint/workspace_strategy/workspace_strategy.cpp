@@ -12,6 +12,10 @@ void WorkSpaceStrategy::drawTemporary(QPainter* painter)
 
 }
 
+void WorkSpaceStrategy::onCancel()
+{}
+
+
 BaseShape* WorkSpaceStrategy::findShapeAt(const QPoint& pos) const
 {   
     for (const auto& shape: _context->shapes())

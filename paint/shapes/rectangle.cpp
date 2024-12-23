@@ -1,23 +1,35 @@
 #include <paint/shapes/rectangle.hpp>
 
-Rectangle::Rectangle(const QPoint& topLeft, const QPoint& bottomRight)
-    : BaseShape(topLeft, bottomRight)
+Rectangle::Rectangle(const QRect& rect)
+    : _rect{rect}
 {}
 
 void Rectangle::draw(QPainter* painter)
 {
-    painter->setPen(Qt::black);
-    painter->setBrush(Qt::NoBrush);
-    painter->drawRect(QRect(_topLeft, _bottomRight));
+    painter->drawRect(_rect);
 }
 
-bool Rectangle::contains(const QPoint& point)
+bool Rectangle::contains(const QPoint& point) const
 {
-    QRect rect = QRect(_topLeft, _bottomRight);
-    return rect.contains(point);
+    return _rect.contains(point);
+}
+
+void Rectangle::resize(const QRect& newBounds)
+{
+    _rect = newBounds;
 }
 
 void Rectangle::move(const QPoint& delta)
 {
-    //_boundingRect.translate(delta);
+    _rect.translate(delta);
+}
+
+QPoint Rectangle::center() const
+{
+    return _rect.center();
+}
+
+QRect Rectangle::boundingRect() const
+{
+    return _rect;
 }

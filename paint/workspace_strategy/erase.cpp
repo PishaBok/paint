@@ -29,3 +29,5 @@ void EraseStrategy::mouseMoveEvent(QMouseEvent* event)
 void EraseStrategy::mouseReleaseEvent(QMouseEvent* event)
 {}
 
+void EraseStrategy::keyPressEvent(QKeyEvent* event)
+{}

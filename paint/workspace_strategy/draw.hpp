@@ -6,11 +6,13 @@
 #include <paint/workspace_strategy/workspace_strategy.hpp>
 #include <paint/shapes/rectangle.hpp>
 #include <paint/shapes/triangle.hpp>
+#include <paint/shapes/ellipse.hpp>
 
 enum class ShapeType
 {
     rectangle,
-    triangle
+    triangle,
+    ellipse
 };
 
 class DrawStrategy: public WorkSpaceStrategy
@@ -22,13 +24,17 @@ public:
     void mousePressEvent(QMouseEvent* event) override;
     void mouseMoveEvent(QMouseEvent* event) override;
     void mouseReleaseEvent(QMouseEvent* event) override;
+    void keyPressEvent(QKeyEvent* event) override;
     void drawTemporary(QPainter* painter) override;
+protected:
+    void onCancel() override;
 private:
     ShapeType _type;
     const std::map<ShapeType, std::function<std::unique_ptr<BaseShape>(void)>> _shapeFactory
     {
         {ShapeType::rectangle, [](){return std::make_unique<Rectangle>();}},
-        {ShapeType::triangle, [](){return std::make_unique<Triangle>();}}
+        {ShapeType::triangle, [](){return std::make_unique<Triangle>();}},
+        {ShapeType::ellipse, [](){return std::make_unique<Ellipse>();}}
     };
 
     std::unique_ptr<BaseShape> _currentShape;

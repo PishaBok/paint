@@ -32,6 +32,13 @@ QToolBar* Window::createToolBar()
         _workSpace->setStrategy(std::move(strategy));
     });
 
+    QPushButton* ellipseButton = new QPushButton("Эллипс");
+    connect(ellipseButton, &QPushButton::clicked, [this]()
+    {       
+        auto strategy = std::make_unique<DrawStrategy>(_workSpace, ShapeType::ellipse);
+        _workSpace->setStrategy(std::move(strategy));
+    });
+
     QPushButton* boundButton = new QPushButton("Связь");
     connect(boundButton, &QPushButton::clicked, [this]()
     {       
@@ -40,6 +47,11 @@ QToolBar* Window::createToolBar()
     });
 
     QPushButton* dragButton = new QPushButton("Переместить");
+    connect(dragButton, &QPushButton::clicked, [this]()
+    {       
+        auto strategy = std::make_unique<DragStrategy>(_workSpace);
+        _workSpace->setStrategy(std::move(strategy));
+    });
 
     QPushButton* eraseButton = new QPushButton("Удалить");
     connect(eraseButton, &QPushButton::clicked, [this]()
@@ -50,6 +62,7 @@ QToolBar* Window::createToolBar()
 
     toolBar->addWidget(rectButton);
     toolBar->addWidget(triangleButton);
+    toolBar->addWidget(ellipseButton);
     toolBar->addSeparator();
     toolBar->addWidget(boundButton);
     toolBar->addWidget(dragButton);

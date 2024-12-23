@@ -7,33 +7,8 @@ BoundStrategy::BoundStrategy(WorkSpace* context)
 
 void BoundStrategy::mousePressEvent(QMouseEvent* event)
 {
-    if (event->button() == Qt::LeftButton)
-    {
-        if (!_isDrawning)
-        {
-            _startShape = findShapeAt(event->pos()); // Ищем фигуру под курсором
-            if (_startShape)
-            {
-                _isDrawning = true;
-                _startPos = _startShape->center(); // Начинаем с центра фигуры
-                _currentPos = event->pos();
-                _context->setMouseTracking(true); // Включаем отслеживание мыши
-                _context->update();
-                
-            }
-        }
-        else
-        {
-            // Повторный клик завершает связь
-            auto endShape = findShapeAt(event->pos());
-            if (endShape && endShape != _startShape)
-            {
-                auto bound = std::make_unique<Bound>(_startShape, endShape);
-                _context->addBound(std::move(bound));
-            }
-            endDrawning();
-        }
-    }
+    if (event->button() == Qt::LeftButton) {handleLeftButton(event);} // Обрабатываем нажатие левой кнопки
+    else if (event->button() == Qt::RightButton) {onCancel();}  // Если была нажата правая кнопка мыши - отменяем рисование
 }
 
 void BoundStrategy::mouseMoveEvent(QMouseEvent* event)
@@ -48,7 +23,38 @@ void BoundStrategy::mouseMoveEvent(QMouseEvent* event)
 void BoundStrategy::mouseReleaseEvent(QMouseEvent* event)
 {}
 
-void BoundStrategy::endDrawning()
+void BoundStrategy::keyPressEvent(QKeyEvent* event)
+{
+    if (_isDrawning && event->key() == Qt::Key_Escape) {onCancel();}
+}
+
+void BoundStrategy::handleLeftButton(QMouseEvent* event)
+{
+    if (!_isDrawning)
+    {
+        _startShape = findShapeAt(event->pos()); // Ищем фигуру под курсором
+        if (_startShape)
+        {
+            _isDrawning = true;
+            _startPos = _startShape->center(); // Начинаем с центра фигуры
+            _currentPos = event->pos();
+            _context->setMouseTracking(true); // Включаем отслеживание мыши
+            _context->update();  
+        }
+    }
+    else  
+    {   // Повторный клик завершает связь
+        auto endShape = findShapeAt(event->pos());
+        if (endShape && endShape != _startShape)
+        {
+            auto bound = std::make_unique<Bound>(_startShape, endShape);
+            _context->addBound(std::move(bound));
+        }
+        onCancel();
+    }
+}
+
+void BoundStrategy::onCancel()
 {
     _isDrawning = false;
     _startShape = nullptr;

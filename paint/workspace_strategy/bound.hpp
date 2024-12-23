@@ -13,6 +13,9 @@ public:
     void mouseMoveEvent(QMouseEvent* event) override;
     void mouseReleaseEvent(QMouseEvent* event) override;
     void drawTemporary(QPainter* painter) override;
+    void keyPressEvent(QKeyEvent* event) override;
+protected:
+    void onCancel() override;
 private:
     bool _isDrawning;
     BaseShape* _startShape;
@@ -20,5 +23,6 @@ private:
     QPoint _currentPos;
     QPoint _endPos;
 
-    void endDrawning();
+
+    void handleLeftButton(QMouseEvent* event);
 };

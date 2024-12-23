@@ -1,13 +1,12 @@
 #pragma once
 
-#include <QPolygon>
 #include <paint/shapes/shape.hpp>
 
-class Triangle: public BaseShape
+class Ellipse: public BaseShape
 {
 public:
-    Triangle(const QPoint& p1 = {}, const QPoint& p2 = {}, const QPoint& p3 = {});
-    virtual ~Triangle() = default;
+    Ellipse(const QRect& rect = {});
+    virtual ~Ellipse() = default;
 
     void draw(QPainter* painter) override;
     bool contains(const QPoint& point) const override;
@@ -16,5 +15,5 @@ public:
     QPoint center() const override;
     QRect boundingRect() const override;
 private:
-    QPolygon _polygon;
+    QRect _rect;
 };

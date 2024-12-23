@@ -10,8 +10,12 @@ public:
     virtual ~Bound() = default;
 
     void draw(QPainter* painter) override;
-    bool contains(const QPoint& point) override;
-    void move(const QPoint& delta) override;
+
+    bool contains(const QPoint& point) const override {}; // Проверка на содержание фигурой точки
+    void resize(const QRect& newBounds) override {}; // Изменение размера
+    void move(const QPoint& delta) override {}; // Перемещение фигуры
+    QPoint center() const override {}; // Получение центра фигуры
+    QRect boundingRect() const override {}; // Получение ограничивающего прямоугольника
 
     bool isUsedByShape(BaseShape* shape) const;
 private:
