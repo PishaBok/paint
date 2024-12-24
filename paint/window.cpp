@@ -8,10 +8,10 @@ Window::Window(QMainWindow* parent)
 
     addToolBar(toolBar);
     setCentralWidget(_workSpace);
-    resize(600, 400);
+    resize(800, 600);
 }
 
-QPushButton* Window::createButton(const QString& title, const Button type)
+QPushButton* Window::createStrategyButton(const QString& title, const StrategyButton type)
 {
     QPushButton* button{new QPushButton(title)};
     button->setCheckable(true);
@@ -31,12 +31,20 @@ QToolBar* Window::createToolBar()
     toolBar->setMovable(false);
 
     // Создание кнопок
-    QPushButton* rectButton = createButton(QString::fromUtf8("\u25A1"), Button::rectangle);
-    QPushButton* triangleButton = createButton(QString::fromUtf8("\u25B2"), Button::triangle);
-    QPushButton* ellipseButton = createButton(QString::fromUtf8("\u25EF"), Button::ellipse);
-    QPushButton* boundButton = createButton(QString::fromUtf8("\u27CD"), Button::bound);
-    QPushButton* dragButton = createButton(QString::fromUtf8("\u270B"), Button::drag);
-    QPushButton* eraseButton = createButton(QString::fromUtf8("\U0001F5D1"), Button::erase);
+    QPushButton* rectButton = createStrategyButton(QString::fromUtf8("\u25A1"), StrategyButton::rectangle);
+    QPushButton* triangleButton = createStrategyButton(QString::fromUtf8("\u25B2"), StrategyButton::triangle);
+    QPushButton* ellipseButton = createStrategyButton(QString::fromUtf8("\u25EF"), StrategyButton::ellipse);
+    QPushButton* boundButton = createStrategyButton(QString::fromUtf8("\u27CD"), StrategyButton::bound);
+    QPushButton* dragButton = createStrategyButton(QString::fromUtf8("\u270B"), StrategyButton::drag);
+    QPushButton* eraseButton = createStrategyButton(QString::fromUtf8("\U0001F5D1"), StrategyButton::erase);
+
+    QPushButton* loadFileButton{new QPushButton("Загрузить")};
+    connect(loadFileButton, &QPushButton::pressed, this, &Window::loadFileButtonPressed);
+    QPushButton* saveFileButton{new QPushButton("Сохранить")};
+    connect(saveFileButton, &QPushButton::pressed, this, &Window::saveFileButtonPressed);
+
+    QWidget* spacer{new QWidget};
+    spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
     toolBar->addWidget(rectButton);
     toolBar->addWidget(triangleButton);
@@ -45,6 +53,10 @@ QToolBar* Window::createToolBar()
     toolBar->addWidget(boundButton);
     toolBar->addWidget(dragButton);
     toolBar->addWidget(eraseButton);
+    toolBar->addSeparator();
+    toolBar->addWidget(spacer);
+    toolBar->addWidget(loadFileButton);
+    toolBar->addWidget(saveFileButton);
 
     return toolBar;
 }
@@ -53,7 +65,7 @@ QToolBar* Window::createToolBar()
 
 void Window::strategyButtonPressed()
 {
-    Button button = _buttonMap.at(sender());
+    StrategyButton button = _buttonMap.at(sender());
     auto strategy = _strategyFactory.at(button)();
 
     _workSpace->setStrategy(std::move(strategy)); // Меняем стратегию в рабочем пространстве
@@ -72,3 +84,41 @@ void Window::buttonHighlighter()
     QPushButton* senderBut = qobject_cast<QPushButton*>(sender());
     senderBut->setChecked(true);
 }
+
+void Window::loadFileButtonPressed()
+{
+    QString filePath = QFileDialog::getOpenFileName(
+        this, "Открыть файл", QString(), "Paint Files (*.paintdoc);;All Files (*.*)"
+    );
+
+    if (filePath.isEmpty()) {return;} // Пользователь нажал "Отмена"
+
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        QMessageBox::critical(nullptr, "Ошибка", "Не удалось открыть файл.");
+        return;
+    }
+
+    _workSpace->loadFromFile(file);
+}
+
+void Window::saveFileButtonPressed()
+{
+    QString filePath = QFileDialog::getSaveFileName(
+        this, "Сохранить как", QString(), "Paint Files (*.paintdoc);;All Files (*.*)"
+    );
+
+    if (filePath.isEmpty()) {return;} // Пользователь нажал "Отмена"
+    else if (!filePath.endsWith(".paintdoc", Qt::CaseInsensitive)) {filePath += ".paintdoc";} // Добавляем расширение
+
+    QFile file(filePath);
+    if (!file.open(QIODevice::WriteOnly))
+    {
+        QMessageBox::critical(nullptr, "Ошибка", "Не удалось открыть файл для записи.");
+        return;
+    }
+
+    _workSpace->saveToFile(file);
+}
+

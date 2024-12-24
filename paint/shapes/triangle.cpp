@@ -1,7 +1,7 @@
 #include <paint/shapes/triangle.hpp>
 
 Triangle::Triangle(const QPoint& p1, const QPoint& p2, const QPoint& p3)
-    : _polygon{QPolygon({p1, p2, p3})}
+    : BaseShape(ShapeType::triangle), _polygon{QPolygon({p1, p2, p3})}
 {}
 
 void Triangle::draw(QPainter* painter)
@@ -41,3 +41,25 @@ QRect Triangle::boundingRect() const
     return _polygon.boundingRect();
 }
 
+QJsonObject Triangle::serialize() const
+{
+    QJsonObject triangleObj;
+    triangleObj["id"] = _id;
+    triangleObj["type"] = static_cast<int>(_type);
+    
+    QJsonObject dataObj;
+    dataObj["polygon"] = polygonToJson(_polygon);
+
+    triangleObj["data"] = dataObj;
+
+    return triangleObj;
+}
+
+void Triangle::deserialize(const QJsonObject& jsonObj)
+{
+    _id = jsonObj["id"].toString();
+    _type = static_cast<ShapeType>(jsonObj["type"].toInt());
+
+    QJsonObject dataObj = jsonObj["data"].toObject();
+    _polygon = polygonFromJson(dataObj["polygon"].toArray());
+}

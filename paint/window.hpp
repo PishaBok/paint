@@ -3,10 +3,11 @@
 #include <QMainWindow>
 #include <QToolBar>
 #include <QPushButton>
+#include <QFileDialog>
 
 #include <paint/workspace.hpp>
 
-enum class Button
+enum class StrategyButton
 {
     rectangle,
     triangle,
@@ -23,21 +24,23 @@ public:
     Window(QMainWindow* parent = nullptr);
 private:
     WorkSpace* _workSpace;
-    std::map<QObject*, Button> _buttonMap;
-    std::map<Button, std::function<std::unique_ptr<WorkSpaceStrategy>(void)>> _strategyFactory
+    std::map<QObject*, StrategyButton> _buttonMap;
+    std::map<StrategyButton, std::function<std::unique_ptr<WorkSpaceStrategy>(void)>> _strategyFactory
     {
-        {Button::rectangle, [this](){return std::make_unique<DrawStrategy>(_workSpace, ShapeType::rectangle);}},
-        {Button::triangle, [this](){return std::make_unique<DrawStrategy>(_workSpace, ShapeType::triangle);}},
-        {Button::ellipse, [this](){return std::make_unique<DrawStrategy>(_workSpace, ShapeType::ellipse);}},
-        {Button::bound, [this](){return std::make_unique<BoundStrategy>(_workSpace);}},
-        {Button::drag, [this](){return std::make_unique<DragStrategy>(_workSpace);}},
-        {Button::erase, [this](){return std::make_unique<EraseStrategy>(_workSpace);}}
+        {StrategyButton::rectangle, [this](){return std::make_unique<DrawStrategy>(_workSpace, ShapeType::rectangle);}},
+        {StrategyButton::triangle, [this](){return std::make_unique<DrawStrategy>(_workSpace, ShapeType::triangle);}},
+        {StrategyButton::ellipse, [this](){return std::make_unique<DrawStrategy>(_workSpace, ShapeType::ellipse);}},
+        {StrategyButton::bound, [this](){return std::make_unique<BoundStrategy>(_workSpace);}},
+        {StrategyButton::drag, [this](){return std::make_unique<DragStrategy>(_workSpace);}},
+        {StrategyButton::erase, [this](){return std::make_unique<EraseStrategy>(_workSpace);}}
     }; 
 
 
-    QPushButton* createButton(const QString& title, const Button type); // Создание кнопки
+    QPushButton* createStrategyButton(const QString& title, const StrategyButton type); // Создание кнопки
     QToolBar* createToolBar(); // Создание туллбара
 private slots:
     void strategyButtonPressed(); // Смена режима в WorkSpace
+    void loadFileButtonPressed();
+    void saveFileButtonPressed();
     void buttonHighlighter(); // Подсветка активированной кнопки
 };

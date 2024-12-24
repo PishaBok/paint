@@ -12,7 +12,7 @@ void DrawStrategy::mousePressEvent(QMouseEvent* event)
         _startPos = event->pos();
         _endPos = _startPos;
         _isDrawning = true;
-        _currentShape = _shapeFactory.at(_type)();
+        _currentShape = shapeFactory.at(_type)();
     }
     else if (event->button() == Qt::RightButton) {onCancel();} // Если была нажата правая кнопка мыши - отменяем рисование
 }

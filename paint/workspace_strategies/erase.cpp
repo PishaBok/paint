@@ -14,7 +14,7 @@ void EraseStrategy::mousePressEvent(QMouseEvent* event)
         if (shape)
         {   
             // Очищаем все связанные с shape связи
-            _context->removeBoundsIf([&](const std::unique_ptr<Bound>& bound)
+            _context->removeBoundsIf([&](const std::unique_ptr<BoundLine>& bound)
                 {return bound->isUsedByShape(shape);});
 
             _context->removeShape(shape); // Удаляем фигуру

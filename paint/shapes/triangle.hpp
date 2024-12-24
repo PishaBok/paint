@@ -15,6 +15,8 @@ public:
     void move(const QPoint& delta) override;
     QPoint center() const override;
     QRect boundingRect() const override;
+    QJsonObject serialize() const override;
+    void deserialize(const QJsonObject& jsonObj) override;
 private:
     QPolygon _polygon;
 };

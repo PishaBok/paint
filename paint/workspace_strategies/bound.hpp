@@ -1,7 +1,7 @@
 #pragma once
 
 #include <paint/workspace_strategies/workspace_strategy.hpp>
-#include <paint/shapes/bound.hpp>
+#include <paint/shapes/boundline.hpp>
 
 class BoundStrategy: public WorkSpaceStrategy
 {

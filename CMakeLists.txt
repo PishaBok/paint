@@ -26,7 +26,6 @@ add_executable(Paint
 
 target_include_directories(Paint PRIVATE
         ${CMAKE_SOURCE_DIR}
-
 )
 
 target_link_libraries(Paint PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Widgets)

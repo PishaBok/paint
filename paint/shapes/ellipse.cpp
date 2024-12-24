@@ -1,7 +1,7 @@
 #include <paint/shapes/ellipse.hpp>
 
 Ellipse::Ellipse(const QRect& rect)
-    : _rect{rect}
+    : BaseShape(ShapeType::ellipse), _rect{rect}
 {}
 
 void Ellipse::draw(QPainter* painter)
@@ -38,4 +38,27 @@ QPoint Ellipse::center() const
 QRect Ellipse::boundingRect() const
 {
     return _rect;
+}
+
+QJsonObject Ellipse::serialize() const
+{
+    QJsonObject ellipseObj;
+    ellipseObj["id"] = _id;
+    ellipseObj["type"] = static_cast<int>(_type);
+    
+    QJsonObject dataObj;
+    dataObj["rectangle"] = rectToJson(_rect);
+
+    ellipseObj["data"] = dataObj;
+
+    return ellipseObj;
+}
+
+void Ellipse::deserialize(const QJsonObject& jsonObj)
+{
+    _id = jsonObj["id"].toString();
+    _type = static_cast<ShapeType>(jsonObj["type"].toInt());
+
+    QJsonObject dataObj = jsonObj["data"].toObject();
+    _rect = rectFromJson(dataObj["rectangle"].toArray());
 }

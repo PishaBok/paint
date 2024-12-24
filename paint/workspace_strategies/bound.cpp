@@ -47,7 +47,7 @@ void BoundStrategy::handleLeftButton(QMouseEvent* event)
         auto endShape = findShapeAt(event->pos());
         if (endShape && endShape != _startShape)
         {
-            auto bound = std::make_unique<Bound>(_startShape, endShape);
+            auto bound = std::make_unique<BoundLine>(_startShape, endShape);
             _context->addBound(std::move(bound));
         }
         onCancel();
