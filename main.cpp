@@ -9,6 +9,7 @@ int main(int argc, char** argv)
     QFile styleFile(":/css/style.css");
     styleFile.open(QFile::ReadOnly);
     app.setStyleSheet(styleFile.readAll());
+    app.setWindowIcon(QIcon(":/img/app_icon.png"));
 
     Window wd;
     wd.show();

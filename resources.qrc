@@ -3,4 +3,7 @@
     <qresource>
         <file>css/style.css</file>
     </qresource>
+    <qresource>
+        <file>img/app_icon.png</file>
+    </qresource>
 </RCC>
