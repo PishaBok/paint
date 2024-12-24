@@ -9,30 +9,30 @@
 	•	Компилятор (Clang/GCC)
 	•	Ninja (опционально)
 
-Сборка
+### Сборка
 
-	1.	Склонируйте проект:
+Склонируйте проект:
 
-git clone https://github.com/PishaBok/paint.git
-cd paint
-
-
-	2.	Создайте папку сборки и перейдите в неё:
-
-mkdir build && cd build
+	git clone https://github.com/PishaBok/paint.git
+	cd paint
 
 
-	3.	Настройте проект:
+Создайте папку сборки и перейдите в неё:
 
-cmake .. -G "Ninja" -DCMAKE_PREFIX_PATH=/path/to/Qt
-
-
-	4.	Соберите проект:
-
-cmake --build .
+	mkdir build && cd build
 
 
-	5.	Запустите исполняемый файл:
+Настройте проект:
 
-./Paint
+	cmake .. -G "Ninja" -DCMAKE_PREFIX_PATH=/path/to/Qt
+
+
+Соберите проект:
+
+	cmake --build .
+
+
+Запустите исполняемый файл:
+
+	./Paint
 
